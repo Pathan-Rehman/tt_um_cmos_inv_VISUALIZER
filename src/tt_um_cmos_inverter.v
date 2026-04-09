@@ -1,6 +1,7 @@
 /*
  * CMOS INVERTER VISUALIZER - Tiny Tapeout Educational Demo
  * Shows PMOS/NMOS structure, animated current flow, waveform, truth table, and labels
+ * Watermark: @electronics-ed
  */
 
 `default_nettype none
@@ -21,7 +22,9 @@ module tt_um_cmos_inverter (
     wire sound;
     
     assign uo_out = {hsync, B[0], G[0], R[0], vsync, B[1], G[1], R[1]};
-    assign uio_out = {sound, 7'b0};
+    
+    // REVERTED: Placed 'sound' back on uio[7] for VGA Playground compatibility
+    assign uio_out = {sound, 7'b0}; 
     assign uio_oe  = 8'hFF;
     wire _unused = &{ena, ui_in, uio_in};
     
@@ -78,7 +81,7 @@ module tt_um_cmos_inverter (
     wire input_signal = live_input_val;
     wire output_signal = ~input_signal; 
     
-// ===== AUDIO =====
+    // ===== AUDIO (REVERTED TO KNOWN-WORKING SIMULATOR LOGIC) =====
     reg [11:0] tone_cnt; reg tone_wave;
     wire [11:0] tone_limit = input_signal ? 12'd180 : 12'd300; 
 
@@ -134,29 +137,50 @@ module tt_um_cmos_inverter (
             end
             
             // NODE LABELS: VDD, GND, A, Y (White)
-            // VDD (Above PMOS)
             if (py>=55 && py<=65) begin
                 if (px>=170 && px<=178) if ((px<=172 && py<=60) || (px>=176 && py<=60) || (py>60 && px>=173 && px<=175)) draw_text_labels = 2'b10; // V
                 if (px>=182 && px<=190) if (px<=184 || py<=57 || py>=63 || (px>=188 && py>=56 && py<=64)) draw_text_labels = 2'b10; // D
                 if (px>=194 && px<=202) if (px<=196 || py<=57 || py>=63 || (px>=200 && py>=56 && py<=64)) draw_text_labels = 2'b10; // D
             end
             
-            // GND (Below NMOS)
             if (py>=390 && py<=400) begin
                 if (px>=170 && px<=178) if (px<=172 || py<=392 || py>=398 || (px>=176 && py>=395) || (py==395 && px>=174)) draw_text_labels = 2'b10; // G
                 if (px>=182 && px<=190) if (px<=184 || px>=188 || ((py-390)==(px-182))) draw_text_labels = 2'b10; // N
                 if (px>=194 && px<=202) if (px<=196 || py<=392 || py>=398 || (px>=200 && py>=391 && py<=399)) draw_text_labels = 2'b10; // D
             end
             
-            // A (Input Node)
-            if (py>=205 && py<=215 && px>=60 && px<=70) if (px<=62 || px>=68 || py<=207 || py==210) draw_text_labels = 2'b10;
-            
-            // Y (Output Node)
-            if (py>=205 && py<=215 && px>=290 && px<=300) if ((py<=210 && (px<=292 || px>=298)) || (py>210 && px>=294 && px<=296) || py==210) draw_text_labels = 2'b10;
+            if (py>=205 && py<=215 && px>=60 && px<=70) if (px<=62 || px>=68 || py<=207 || py==210) draw_text_labels = 2'b10; // A
+            if (py>=205 && py<=215 && px>=290 && px<=300) if ((py<=210 && (px<=292 || px>=298)) || (py>210 && px>=294 && px<=296) || py==210) draw_text_labels = 2'b10; // Y
         end
     endfunction
 
-    // 2. Draw CMOS Circuit with Animated Voltage Flow
+    // 2. Draw Watermark: "@electronics-ed" (CRISP 2px-THICK FONT)
+    function draw_watermark;
+        input [9:0] px, py;
+        begin
+            draw_watermark = 0;
+            // Position: y 454-465 (12px high), x 440-615
+            if (py >= 454 && py <= 465) begin
+                if (px >= 440 && px <= 447) if (px<=441 || px>=446 || py<=455 || py>=464 || (px>=443 && px<=444 && py>=459 && py<=460)) draw_watermark = 1;
+                if (px >= 452 && px <= 459) if (px<=453 || py<=455 || py>=464 || (py>=459 && py<=460) || (px>=458 && py<=460)) draw_watermark = 1;
+                if (px >= 464 && px <= 471) if (px>=467 && px<=468) draw_watermark = 1;
+                if (px >= 476 && px <= 483) if (px<=477 || py<=455 || py>=464 || (py>=459 && py<=460) || (px>=482 && py<=460)) draw_watermark = 1;
+                if (px >= 488 && px <= 495) if (px<=489 || py<=455 || py>=464) draw_watermark = 1;
+                if (px >= 500 && px <= 507) if ((px>=503 && px<=504) || (py>=457 && py<=458)) draw_watermark = 1;
+                if (px >= 512 && px <= 519) if (px<=513 || py<=455) draw_watermark = 1;
+                if (px >= 524 && px <= 531) if (px<=525 || px>=530 || py<=455 || py>=464) draw_watermark = 1;
+                if (px >= 536 && px <= 543) if (px<=537 || px>=542 || py<=455) draw_watermark = 1;
+                if (px >= 548 && px <= 555) if ((px>=551 && px<=552) && (py<=455 || py>=458)) draw_watermark = 1;
+                if (px >= 560 && px <= 567) if (px<=561 || py<=455 || py>=464) draw_watermark = 1;
+                if (px >= 572 && px <= 579) if (py<=455 || py>=464 || (py>=459 && py<=460) || (px<=573 && py<=460) || (px>=578 && py>=459)) draw_watermark = 1;
+                if (px >= 584 && px <= 591) if (py>=459 && py<=460) draw_watermark = 1;
+                if (px >= 596 && px <= 603) if (px<=597 || py<=455 || py>=464 || (py>=459 && py<=460) || (px>=602 && py<=460)) draw_watermark = 1;
+                if (px >= 608 && px <= 615) if (px>=614 || (px<=609 && py>=459) || py>=464 || (py>=459 && py<=460)) draw_watermark = 1;
+            end
+        end
+    endfunction
+
+    // 3. Draw CMOS Circuit with Animated Voltage Flow
     function [2:0] draw_cmos;
         input [9:0] px, py;
         input in_val;
@@ -220,7 +244,7 @@ module tt_um_cmos_inverter (
         end
     endfunction
     
-    // 3. Draw Waveform function
+    // 4. Draw Waveform function
     function draw_wave;
         input [9:0] px, py, base_y;
         input is_high, is_edge;
@@ -234,7 +258,7 @@ module tt_um_cmos_inverter (
         end
     endfunction
 
-    // 4. Draw Truth Table Text
+    // 5. Draw Truth Table Text
     function draw_truth_table;
         input [9:0] px, py;
         begin
@@ -272,6 +296,7 @@ module tt_um_cmos_inverter (
     wire [9:0] wave_y_output = 180;
     
     wire [1:0] txt_labels = draw_text_labels(x, y);
+    wire watermark_on = draw_watermark(x, y);
     wire [2:0] cmos_pixel = draw_cmos(x, y, input_signal, frame[5:0]);
     wire input_wave_on = draw_wave(x, y, wave_y_input, visual_input_val, is_transition);
     wire output_wave_on = draw_wave(x, y, wave_y_output, ~visual_input_val, is_transition);
@@ -281,6 +306,9 @@ module tt_um_cmos_inverter (
     wire hl_row1 = (!input_signal) && (x > 406 && x < 554 && y > 335 && y < 368);
     wire hl_row2 = (input_signal) && (x > 406 && x < 554 && y > 368 && y < 394);
     
+    // Engineering Grid Background (Lines every 64 pixels)
+    wire grid_on = (x[5:0] == 0) || (y[5:0] == 0);
+    
     // ===== COLOR OUTPUT DECODING =====
     reg [1:0] r_out, g_out, b_out;
     
@@ -288,7 +316,7 @@ module tt_um_cmos_inverter (
         if (!video_active) begin
             r_out = 2'b00; g_out = 2'b00; b_out = 2'b00;
         end
-        else if (txt_labels == 2'b01) begin // Title Text
+        else if (txt_labels == 2'b01 || watermark_on) begin // Title Text & Watermark
             r_out = 2'b11; g_out = 2'b11; b_out = 2'b00;  // Yellow
         end
         else if (txt_labels == 2'b10) begin // Node Labels (A, Y, VDD, GND)
@@ -324,8 +352,11 @@ module tt_um_cmos_inverter (
         else if (hl_row1 || hl_row2) begin
             r_out = 2'b01; g_out = 2'b01; b_out = 2'b10;  // Highlight active state
         end
+        else if (grid_on) begin
+            r_out = 2'b00; g_out = 2'b01; b_out = 2'b01;  // Subdued Dark Cyan Grid
+        end
         else begin
-            r_out = 2'b00; g_out = 2'b00; b_out = 2'b00;  // Black background
+            r_out = 2'b00; g_out = 2'b00; b_out = 2'b01;  // Dark Subdued background
         end
     end
     
