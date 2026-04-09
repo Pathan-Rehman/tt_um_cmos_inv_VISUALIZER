@@ -78,15 +78,22 @@ module tt_um_cmos_inverter (
     wire input_signal = live_input_val;
     wire output_signal = ~input_signal; 
     
-    // ===== AUDIO =====
+// ===== AUDIO =====
     reg [11:0] tone_cnt; reg tone_wave;
     wire [11:0] tone_limit = input_signal ? 12'd180 : 12'd300; 
 
-    always @(posedge clk) if (x == 0) begin
-        if (tone_cnt > tone_limit) begin 
-            tone_cnt <= 0; tone_wave <= ~tone_wave; 
+    always @(posedge clk) begin
+        if (~rst_n) begin
+            tone_cnt <= 0;
+            tone_wave <= 0;
+        end else if (x == 0) begin
+            if (tone_cnt > tone_limit) begin 
+                tone_cnt <= 0; 
+                tone_wave <= ~tone_wave; 
+            end else begin
+                tone_cnt <= tone_cnt + 1;
+            end
         end
-        else tone_cnt <= tone_cnt + 1;
     end
     assign sound = tone_wave;
     
