@@ -1,17 +1,18 @@
+---
 # Tiny Tapeout project information
 project:
-  title:       "Reactive Plasma"
-  author:      "Pathan-Rehman"
-  discord:     ""
-  description: "cmos inverter simulation - demoscene entry for TTSKY26a"
-  language:    "Verilog"
-  clock_hz:    25175000
+  title:        "Reactive Plasma: CMOS Inverter"
+  author:       "Pathan-Rehman"
+  discord:      ""
+  description:  "CMOS Inverter Visualizer - Demoscene entry for TTSKY26a"
+  language:     "Verilog"
+  clock_hz:     25175000
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
   tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
-  top_module:  "tt_um_cmos_inverter"
+  top_module:   "tt_um_cmos_inverter"
 
   # List your project's source files here.
   # Source files must be in ./src and you must list each source file separately, one per line.
@@ -31,7 +32,7 @@ pinout:
   ui[6]: ""
   ui[7]: ""
 
-  # Outputs
+  # Outputs (Tiny VGA PMOD Mapping)
   uo[0]: "R1"
   uo[1]: "G1"
   uo[2]: "B1"
