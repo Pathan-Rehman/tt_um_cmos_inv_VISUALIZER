@@ -1,28 +1,26 @@
-What It Is
-At its core, this is a hardware-level educational visualization written in Verilog, specifically formatted for the Tiny Tapeout project.
+### **What It Is**
+At its core, this is a hardware-level educational visualization written in Verilog, specifically formatted for the Tiny Tapeout project. 
 
 It is not a software program running on an operating system. Instead, it is pure, combinational digital logic that manipulates raw electrons at 25 million times a second (25.175 MHz) to generate native VGA video signals and PWM audio. It belongs to a niche category of engineering called "racing the beam" or "demoscene" programming, where complex visuals are generated entirely through math and logic gates because there is no RAM available for a traditional framebuffer.
 
-What It Does
+### **What It Does**
 The module acts as a self-contained interactive textbook for a fundamental digital logic gate. When synthesized onto a silicon chip (or FPGA) and plugged into a monitor, it does the following in real-time:
 
-Paints a Circuit Diagram: It draws the physical geometry of a CMOS inverter, clearly showing the Pull-Up Network (PMOS) connected to VDD and the Pull-Down Network (NMOS) connected to GND.
+* **Paints a Circuit Diagram:** It draws the physical geometry of a CMOS inverter, clearly showing the Pull-Up Network (PMOS) connected to VDD and the Pull-Down Network (NMOS) connected to GND.
+* **Animates Electron Flow:** Based on an internal timer, it simulates a logic signal shifting from High to Low. When the input is High (Red), the NMOS path animates with green "marching dashes" to show the output being pulled to ground. When Low (Blue), the PMOS path animates with yellow dashes to show the output being pulled to VDD.
+* **Draws a Live Oscilloscope:** It features a scrolling waveform at the bottom of the screen, tracking the input signal in red/pink and the inverted output signal in cyan, proving the timing relationship between the two.
+* **Live Truth Table:** It displays a classic A/Y truth table and dynamically highlights the active row based on the current animated state.
+* **Audio Synesthesia:** It generates a square-wave audio tone that physically changes pitch depending on whether the logic state is a 1 or a 0, reinforcing the visual learning with auditory feedback.
 
-Animates Electron Flow: Based on an internal timer, it simulates a logic signal shifting from High to Low. When the input is High (Red), the NMOS path animates with green "marching dashes" to show the output being pulled to ground. When Low (Blue), the PMOS path animates with yellow dashes to show the output being pulled to VDD.
+### **Why I Made It**
+Looking at the architecture and the constraints I was working under, the "why" becomes very clear:
 
-Draws a Live Oscilloscope: It features a scrolling waveform at the bottom of the screen, tracking the input signal in red/pink and the inverted output signal in cyan, proving the timing relationship between the two.
+**1. To make invisible VLSI concepts visible.** When working deep in CMOS design, simulation waveforms and data-flow graphs can get incredibly abstract. I built this to bridge the gap between theoretical textbook diagrams and actual silicon behavior. I wanted something that makes the fundamental building block of modern computing—the inverter—tangible and intuitive to look at. 
 
-Live Truth Table: It displays a classic A/Y truth table and dynamically highlights the active row based on the current animated state.
+**2. To create compelling educational content.**
+The inclusion of the `@electronics-ed` watermark and the striking, color-coded visuals point directly to this being designed for an audience. It is notoriously difficult to make digital signal processing and ASIC architecture look "cool" on camera. By forcing the hardware to draw its own animated diagrams, I have created a perfect, eye-catching centerpiece for a YouTube Short or educational reel. It’s a way to teach complex engineering concepts in a highly scannable, visual format.
 
-Audio Synesthesia: It generates a square-wave audio tone that physically changes pitch depending on whether the logic state is a 1 or a 0, reinforcing the visual learning with auditory feedback.
-
-Why You Made It
-Looking at the architecture and the constraints you were working under, the "why" becomes very clear:
-
-1. To make invisible VLSI concepts visible. When working deep in CMOS design, simulation waveforms and data-flow graphs can get incredibly abstract. You built this to bridge the gap between theoretical textbook diagrams and actual silicon behavior. You wanted something that makes the fundamental building block of modern computing—the inverter—tangible and intuitive to look at.
-
-2. To create compelling educational content.
-The inclusion of the @electronics-ed watermark and the striking, color-coded visuals point directly to this being designed for an audience. It is notoriously difficult to make digital signal processing and ASIC architecture look "cool" on camera. By forcing the hardware to draw its own animated diagrams, you've created a perfect, eye-catching centerpiece for a YouTube Short or educational reel. It’s a way to teach complex engineering concepts in a highly scannable, visual format.
+**3. The technical flex.** I have built an entire educational platform into what is essentially a sliver of a single silicon tile (~1000 gates). Doing this without memory buffers, using only coordinate math, bit-shifting, and shared clock dividers for audio and video, is a massive demonstration of technical virtuosity. I made it to prove that I could squeeze maximum educational utility out of minimum hardware means.
 
 Here is a detailed architectural and mathematical breakdown of how this CMOS Inverter Visualizer works.
 
